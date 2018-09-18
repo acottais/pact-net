@@ -1,5 +1,6 @@
 ﻿using PactNet.Core;
 using PactNet.Extensions;
+using PactNet.Mocks.MockHttpService.Host;
 using PactNet.Models;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace PactNet.Tests.Core
         public void Ctor_WhenCalled_SetsTheCorrectScript()
         {
             var config = GetSubject();
-
+            
             Assert.Equal("pact-mock-service", config.Script);
         }
 
