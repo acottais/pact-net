@@ -4,7 +4,7 @@ using PactNet.Models;
 
 namespace PactNet
 {
-    public interface IPactBuilder
+    public interface IPactBuilder : IPactBaseBuilder<IPactBuilder>
     {
         IPactBuilder ServiceConsumer(string consumerName);
         IPactBuilder HasPactWith(string providerName);
