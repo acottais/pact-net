@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using PactNet.Core;
 using static System.String;
 using System.Collections.Generic;
