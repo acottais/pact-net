@@ -46,7 +46,7 @@ namespace PactNet.Tests
         {
             var pactVerifier = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => 
+            Assert.Throws<ArgumentException>(() =>
                 pactVerifier
                 .ProviderState(null));
         }
