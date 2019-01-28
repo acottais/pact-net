@@ -1,22 +1,14 @@
 # PactNet
 [![Build status](https://ci.appveyor.com/api/projects/status/5h4t9oerlhqcnwm8/branch/master?svg=true)](https://ci.appveyor.com/project/SEEKJobs/pact-net/branch/master)  
-A .NET implementation of the Ruby consumer driven contract library, [Pact](https://github.com/realestate-com-au/pact).  
+A .NET implementation of the Ruby consumer driven contract library, [Pact](https://github.com/pact-foundation/pact-ruby).  
 Pact is based off the specification found at https://github.com/pact-foundation/pact-specification.  
 
-PactNet primarily provides a fluent .NET DSL for describing HTTP requests that will be made to a service provider and the HTTP responses the consumer expects back to function correctly.  
-In documenting the consumer interactions, we can replay them on the provider and ensure the provider responds as expected. This basically gives us complete test symmetry and removes the basic need for integrated tests.  
-PactNet also has the ability to support other mock providers should we see fit.
+PactNet primarily provides a fluent .NET DSL for describing performing contract testing using Pact. See https://docs.pact.io/ for more info about Pact, the benefits it provides and the problems it solves.
 
 PactNet is Version 2.0 compliant, and we now use the [Ruby standalone engine](https://github.com/pact-foundation/pact-ruby-standalone) as we move towards a common core approach. To enable Version 2.0 support,  make sure you supply a `PactConfig` object with `SpecificationVersion = "2.0.0"` when creating the `PactBuilder`.  
 
 In reaching Version 2.0 compliance, we have made some breaking changes. This readme details the current latest version.  
 See [Version 1.0 readme](https://github.com/pact-foundation/pact-net/blob/master/README_v1.md) for the previous version.  
-
-From the [Pact Specification repo](https://github.com/pact-foundation/pact-specification)
-
-> "Pact" is an implementation of "consumer driven contract" testing that allows mocking of responses in the consumer codebase, and verification of the interactions in the provider codebase. The initial implementation was written in Ruby for Rack apps, however a consumer and provider may be implemented in different programming languages, so the "mocking" and the "verifying" steps would be best supported by libraries in their respective project's native languages. Given that the pact file is written in JSON, it should be straightforward to implement a pact library in any language, however, to get the best experience and most reliability of out mixing pact libraries, the matching logic for the requests and responses needs to be identical. There is little confidence to be gained in having your pacts "pass" if the logic used to verify a "pass" is inconsistent between implementations.
-
-Read more about Pact and the problems it solves at https://docs.pact.io/
 
 Please feel free to contribute, we do accept pull requests. This solution has been built using VS2017, you will need it to open this project.
 
@@ -29,20 +21,14 @@ Massive thanks to the SEEK team for all the time and hard work put into this lib
 
 
 ## Known Issues
-1. When debugging a test locally (either consumer or provider) if you click the stop button in your test runner, it will abort the process abruptly and the ruby runtime will not get cleaned up. If you do this, simply kill the ruby process from your task/process manager. We recommend you play the test through to the end to avoid this issue. See https://github.com/pact-foundation/pact-net/issues/108 for more details.
+1. When debugging a test locally (either consumer or provider) if you click the stop button in your test runner, it will abort the process abruptly and the ruby runtime will not get cleaned up. If you do this, kill the ruby process from your task/process manager. We recommend you play the test through to the end to avoid this issue. See https://github.com/pact-foundation/pact-net/issues/108 for more details.
 2. The "metadata" section is not verified for message queue pacts. See [pact-foundation/pact-message-ruby#6](https://github.com/pact-foundation/pact-message-ruby/issues/6) for more details.
 3. The "params" section of the provider states is currently not supported. See [pact-foundation/pact-message-ruby#4](https://github.com/pact-foundation/pact-message-ruby/issues/4) for more details.
 
-## Usage
-Below are some samples of usage.  
-For examples of Version 2 usage, please see the [Samples](https://github.com/pact-foundation/pact-net/blob/master/Samples/EventApi/Consumer.Tests/EventsApiConsumerTests.cs).  
-
-We have also written some `//NOTE:` comments inline in the code to help explain what certain calls do.
-
-**A few others things to note:**
+## A Few Others Things to Note
 1. When using `Match.Regex` you must supply a valid Ruby regular expression, as we currently use the Ruby core engine.
 
-### Installing
+## Installing
 
 Via Nuget  
 
@@ -410,17 +396,20 @@ MockProviderService = PactBuilder.MockService(MockServerPort, true, IPAddress.An
 
 ### Message queues support:
 
-configuring a pact between a publisher and a subscriber is now possible:
-For further examples please refer to the [Samples](https://github.com/pact-foundation/pact-net/tree/master/Samples) in the solution.
+## Usage
+Pact-Net supports contract testing using HTTP (what pact has always done) and message semantics. 
 
-### Publishing Pacts to a Broker
+For the [HTTP Pact docs see /docs/http-pact.md](docs/http-pact.md)
+For the [Message Pact docs see /docs/message-pact.md](docs/message-pact.md)
+
+## Publishing Pacts to a Broker
 
 The Pact broker is a useful tool that can be used to share pacts between the consumer and provider. In order to make this easy, below are a couple of options for publishing your Pacts to a Pact Broker.
 
-#### Using PowerShell on your build server
+### Using PowerShell on your build server
 [Checkout this gist](https://gist.github.com/neilcampbell/bc1fb7d409425894ece0) to see an example of how you can do this.
 
-#### Using the C# client
+### Using the C# client
 If you use build tools like Fake and Cake, you may want create a broker publish task using the PactPublisher.
 
 ```c#
@@ -430,7 +419,7 @@ pactPublisher.PublishToBroker(
     "1.0.2", new [] { "master" });
 ```
 
-### Publishing Provider Verification Results to a Broker
+## Publishing Provider Verification Results to a Broker
 This feature allows the result of the Provider verification to be pushed to the broker and displayed on the index page.
 In order for this to work you must set the ProviderVersion, PublishVerificationResults and use a pact broker uri. If you do not use a broker uri no verification results will be published. See the code snippet code below.
 For more info and compatibility details [refer to this](https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results).
@@ -452,6 +441,3 @@ pactVerifier
     .Verify();
 ```
 
-#### Further Documentation
-
-* [PactNet Workshop using .NET Core](https://github.com/tdshipley/pact-workshop-dotnet-core-v1)
